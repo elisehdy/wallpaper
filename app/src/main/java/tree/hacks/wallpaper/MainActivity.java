@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
+                //
+
                 CollectionReference group = db.collection("rooms");
                 Map<String, Object> data = new HashMap<>();
                 ArrayList<String> members = (ArrayList) data.get("members");

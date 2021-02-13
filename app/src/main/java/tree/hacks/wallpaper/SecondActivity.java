@@ -44,6 +44,8 @@ public class SecondActivity extends AppCompatActivity {
             startActivityForResult(intent,0);
         });
 
+        //
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         TextView userName = (TextView) findViewById(R.id.userName);
