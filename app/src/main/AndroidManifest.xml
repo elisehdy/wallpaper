@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wallpaper">
         <activity android:name=".SecondActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+                  android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
