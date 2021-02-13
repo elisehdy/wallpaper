@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -23,6 +25,7 @@ import tree.hacks.wallpaper.R;
 public class SecondActivity extends AppCompatActivity {
 
     private Button setWallpaper;
+
     ImageView currWallpaper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,8 @@ public class SecondActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent,0);
         });
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         TextView userName = (TextView) findViewById(R.id.userName);
         String text = getIntent().getExtras().getString("userName");
