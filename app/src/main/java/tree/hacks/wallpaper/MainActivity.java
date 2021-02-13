@@ -1,15 +1,15 @@
 package tree.hacks.wallpaper;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import tree.hacks.wallpaper.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,13 +20,13 @@ public class MainActivity extends AppCompatActivity {
         EditText nameText = (EditText) findViewById(R.id.nameText);
         EditText groupNumber = (EditText) findViewById(R.id.groupNumber);
         TextView messageText = (TextView) findViewById(R.id.messageText);
-        Button secondActivityBtn = (Button) findViewById(R.id.secondActivityBtn);
-        secondActivityBtn.setOnClickListener(new View.OnClickListener() {
+        Button enterGroupBtn = (Button) findViewById(R.id.enterGroupBtn);
+        enterGroupBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String name = nameText.getText().toString();
                 String groupNum = groupNumber.getText().toString();
-                if (! validCombo(name, groupNum)) {
-                    messageText.setText("make sure you have a name and group code is valid!");
+                if (name.length() == 0 || groupNumber.length() != 6) {
+                    messageText.setText("Make sure you have a name and group code is valid!");
                     return;
                 }
 
@@ -38,11 +38,32 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(startIntent);
             }
         });
+
+        Button createGroupBtn = (Button) findViewById(R.id.createGroupBtn);
+        createGroupBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String name = nameText.getText().toString();
+                String groupNum = generateCode();
+                if (name.length() == 0) {
+                    messageText.setText("Don't forget your name!");
+                    return;
+                }
+                groupNumber.setText(groupNum);
+                Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.SecondActivity.class);
+                messageText.setText(""); // clear error message from beginning
+                // show how to pass information to another activity
+                startIntent.putExtra("userName", name);
+                startIntent.putExtra("groupNum", groupNum);
+                startActivity(startIntent);
+            }
+        });
     }
 
-    // returns that whether name and groupCode make a valid combo
-    private boolean validCombo(String name, String groupCode) {
-        return name.length() > 0 && groupCode.length() == 6;
 
+
+    private String generateCode() {
+        return (int) ((Math.random() * (999999 - 100000)) + 100000) + "";
     }
+
+
 }
