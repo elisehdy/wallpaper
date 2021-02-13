@@ -18,10 +18,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import tree.hacks.wallpaper.R;
 
@@ -51,10 +54,15 @@ public class SecondActivity extends AppCompatActivity {
         text = getIntent().getExtras().getString("groupNum");
         wallpaperGroupNumber.setText("you are in group " + text);
 
+        CollectionReference group = db.collection("rooms");
+        Map<String, Object> data = new HashMap<>();
+        data.put("wallpaper", MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        group.document(wallpaperGroupNumber.toString()).set(data);
 
         Button leaveGroup = (Button) findViewById(R.id.leaveGroup);
         Button confirmLeave = (Button) findViewById(R.id.confirmLeave);
         Button cancelLeave = (Button) findViewById(R.id.cancelLeave);
+
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
