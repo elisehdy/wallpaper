@@ -44,8 +44,6 @@ public class SecondActivity extends AppCompatActivity {
             startActivityForResult(intent,0);
         });
 
-        //
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         TextView userName = (TextView) findViewById(R.id.userName);
@@ -56,10 +54,6 @@ public class SecondActivity extends AppCompatActivity {
         text = getIntent().getExtras().getString("groupNum");
         wallpaperGroupNumber.setText("you are in group " + text);
 
-        CollectionReference group = db.collection("rooms");
-        Map<String, Object> data = new HashMap<>();
-        data.put("wallpaper", MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        group.document(wallpaperGroupNumber.toString()).set(data);
 
         Button leaveGroup = (Button) findViewById(R.id.leaveGroup);
         Button confirmLeave = (Button) findViewById(R.id.confirmLeave);
