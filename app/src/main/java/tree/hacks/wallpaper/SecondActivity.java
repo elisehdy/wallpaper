@@ -193,8 +193,9 @@ public class SecondActivity extends AppCompatActivity {
                                 CollectionReference group = db.collection("rooms");
                                 Map<String, Object> image = new HashMap<>();
                                 image.put("wallpaper",  downloadUri.toString());
+                                image.put("owner", nameText);
                                 group.document(groupNumText).update(image);
-                                Toast.makeText(SecondActivity.this, " " + downloadUri, Toast.LENGTH_LONG).show();
+                                Toast.makeText(SecondActivity.this, "Wallpaper Changed", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(SecondActivity.this, "Upload Failed", Toast.LENGTH_LONG).show();
                             }
