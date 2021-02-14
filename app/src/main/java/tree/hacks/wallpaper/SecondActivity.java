@@ -129,7 +129,7 @@ public class SecondActivity extends AppCompatActivity {
                 viewWallpaperError.setText("");
 
                 Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.ViewWallpaper.class);
-                startIntent.putExtra("uri", imageUri.toString());
+                startIntent.putExtra("groupNum", groupNumText);
                 startActivity(startIntent);
             }
         });
