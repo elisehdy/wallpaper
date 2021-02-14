@@ -111,7 +111,7 @@ public class SecondActivity extends AppCompatActivity {
                         if(task.isSuccessful()) {
                             for(QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 try {
-                                    Glide.with(SecondActivity.this)
+                                    Glide.with(getApplicationContext())
                                             .asBitmap()
                                             .load(Objects.requireNonNull(document.getData().get("wallpaper")).toString())
                                             .into(new CustomTarget<Bitmap>() {
@@ -120,7 +120,7 @@ public class SecondActivity extends AppCompatActivity {
                                                     WallpaperManager wallpaperChanger = WallpaperManager.getInstance(getApplicationContext());
                                                     try {
                                                         wallpaperChanger.setBitmap(bitmap);
-                                                        Toast.makeText(SecondActivity.this, "Wallpaper changed", Toast.LENGTH_LONG).show();
+                                                        Toast.makeText(getApplicationContext(), "Wallpaper changed", Toast.LENGTH_LONG).show();
                                                     } catch (IOException e) {
                                                         e.printStackTrace();
                                                     }
@@ -136,7 +136,7 @@ public class SecondActivity extends AppCompatActivity {
 
                             }
                         } else {
-                            Toast.makeText(SecondActivity.this, "Failed to retrieve data", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Failed to retrieve data", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -146,7 +146,7 @@ public class SecondActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(SecondActivity.this, "subscription failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "subscription failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -170,11 +170,11 @@ public class SecondActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(SecondActivity.this, "unsubscription failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "unsubscription failed", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
-                
+
 
                 Intent returnBtn = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(returnBtn);
@@ -211,12 +211,12 @@ public class SecondActivity extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot snapshot,
                                 @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
-                    Toast.makeText(SecondActivity.this, "Connection Failed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Connection Failed", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 if (snapshot != null && snapshot.exists()) {
-                    Glide.with(SecondActivity.this)
+                    Glide.with(getApplicationContext())
                             .asBitmap()
                             .load(Objects.requireNonNull(snapshot.getData().get("wallpaper")).toString())
                             .into(new CustomTarget<Bitmap>() {
@@ -225,7 +225,7 @@ public class SecondActivity extends AppCompatActivity {
                                     WallpaperManager wallpaperChanger = WallpaperManager.getInstance(getApplicationContext());
                                     try {
                                         wallpaperChanger.setBitmap(bitmap);
-                                        Toast.makeText(SecondActivity.this, "Wallpaper changed", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "Wallpaper changed", Toast.LENGTH_SHORT).show();
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
@@ -293,12 +293,13 @@ public class SecondActivity extends AppCompatActivity {
                                 Uri downloadUri = task.getResult();
                                 CollectionReference group = db.collection("rooms");
                                 Map<String, Object> image = new HashMap<>();
+                                assert downloadUri != null;
                                 image.put("wallpaper",  downloadUri.toString());
                                 image.put("owner", nameText);
                                 group.document(groupNumText).update(image);
-                                Toast.makeText(SecondActivity.this, "Wallpaper Changed", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Wallpaper Changed", Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(SecondActivity.this, "Upload Failed", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Upload Failed", Toast.LENGTH_LONG).show();
                             }
                         }
                     });

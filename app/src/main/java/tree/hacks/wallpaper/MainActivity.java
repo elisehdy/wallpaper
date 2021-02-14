@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                                         messageText.setText("Room not found.");
                                     }
                                 } else {
-                                    Toast.makeText(MainActivity.this, "Failed to retrieve data", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "Failed to retrieve data", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });

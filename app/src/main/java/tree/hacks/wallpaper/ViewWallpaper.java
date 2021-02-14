@@ -44,7 +44,7 @@ public class ViewWallpaper extends AppCompatActivity {
                         if(task.isSuccessful()) {
                             for(QueryDocumentSnapshot document : task.getResult()) {
                                 try {
-                                    Glide.with(ViewWallpaper.this)
+                                    Glide.with(getApplicationContext())
                                             .load(Objects.requireNonNull(document.getData().get("wallpaper")).toString())
                                             .into(currWallpaper);
                                 } catch (NullPointerException e) {
