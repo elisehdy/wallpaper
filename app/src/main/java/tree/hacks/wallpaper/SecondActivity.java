@@ -36,6 +36,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -264,6 +266,8 @@ public class SecondActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
+        FirebaseFunctions myFunc;
+        myFunc = FirebaseFunctions.getInstance();
 
         if(resultCode == RESULT_OK){
             imageUri = data.getData();
@@ -297,7 +301,17 @@ public class SecondActivity extends AppCompatActivity {
                                 image.put("wallpaper",  downloadUri.toString());
                                 image.put("owner", nameText);
                                 group.document(groupNumText).update(image);
-                                Toast.makeText(getApplicationContext(), "Wallpaper Changed", Toast.LENGTH_LONG).show();
+                                Map<String, String> groupNum = new HashMap<>();
+                                groupNum.put("text",groupNumText);
+                                myFunc.getHttpsCallable("setWallpaper")
+                                        .call(groupNum)
+                                        .continueWith(new Continuation<HttpsCallableResult, String>() {
+                                            @Override
+                                            public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                                                return (String) task.getResult().getData();
+                                            }
+                                        });
+                                Toast.makeText(getApplicationContext(), "Wallpaper Changed", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(getApplicationContext(), "Upload Failed", Toast.LENGTH_LONG).show();
                             }
