@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     TextView messageText;
     Button enterGroupBtn;
     Button createGroupBtn;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         groupNumber = (EditText) findViewById(R.id.groupNumber);
         messageText = (TextView) findViewById(R.id.messageText);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         enterGroupBtn = (Button) findViewById(R.id.enterGroupBtn);
         enterGroupBtn.setOnClickListener(new View.OnClickListener() {
@@ -62,34 +63,33 @@ public class MainActivity extends AppCompatActivity {
         createGroupBtn = (Button) findViewById(R.id.createGroupBtn);
         createGroupBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String name = nameText.getText().toString();
-                String groupNum = generateCode();
-                if (name.length() == 0) {
-                    messageText.setText("Don't forget your name!");
-                    return;
-                }
-                groupNumber.setText(groupNum);
-
-                CollectionReference group = db.collection("rooms");
-                Map<String, Object> data = new HashMap<>();
-                data.put("group number", groupNum);
-                ArrayList<String> members = new ArrayList<String>();
-                members.add(name);
-                data.put("members", members);
-                group.document(groupNum).set(data);
-
-                Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.SecondActivity.class);
-                messageText.setText(""); // clear error message from beginning
-                // show how to pass information to another activity
-                startIntent.putExtra("userName", name);
-                startIntent.putExtra("groupNum", groupNum);
-                startActivity(startIntent);
+                joinRoom();
             }
         });
     }
 
-    private void joinRoom(String name, String groupNum) {
+    private void joinRoom() {
+        String name = nameText.getText().toString();
+        String groupNum = generateCode();
+        if (name.length() == 0) {
+            messageText.setText("Don't forget your name!");
+            return;
+        }
+        groupNumber.setText(groupNum);
 
+        CollectionReference group = db.collection("rooms");
+        Map<String, Object> data = new HashMap<>();
+        data.put("group number", groupNum);
+        ArrayList<String> members = new ArrayList<String>();
+        members.add(name);
+        data.put("members", members);
+        group.document(groupNum).set(data);
+        Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.SecondActivity.class);
+        messageText.setText(""); // clear error message from beginning
+        // show how to pass information to another activity
+        startIntent.putExtra("userName", name);
+        startIntent.putExtra("groupNum", groupNum);
+        startActivity(startIntent);
     }
 
     private String generateCode() {
