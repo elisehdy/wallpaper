@@ -13,10 +13,8 @@
         android:text="cancel"
         android:textSize="10sp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/leaveGroup"
-        app:layout_constraintVertical_bias="0.0"
         tools:strokeColor="#E91E63" />
 
     <TextView
@@ -24,7 +22,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="TextView"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -36,29 +33,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="TextView"
         android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userName"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/userName" />
+
 
     <Button
         android:id="@+id/leaveGroup"
-        android:layout_width="166dp"
-        android:layout_height="95dp"
-        android:layout_marginTop="200dp"
+        android:layout_width="151dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="12dp"
         android:layout_marginBottom="80dp"
         android:text="LEAVE GROUP"
-        android:textSize="30sp"
+        android:textSize="14sp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wallpaperGroupNumber"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/viewMembersBtn"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/confirmLeave"
@@ -67,12 +63,9 @@
         android:text="confirm"
         android:textSize="10sp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/leaveGroup"
-        app:layout_constraintVertical_bias="0.0"
         tools:strokeColor="#E91E63" />
-
 
     <TextView
         android:id="@+id/textView"
@@ -86,25 +79,49 @@
         app:layout_constraintVertical_bias="0.065" />
 
     <Button
+        android:id="@+id/viewWallpaperBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:text="View Wallpaper"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wallpaperGroupNumber" />
+
+    <TextView
+        android:id="@+id/viewWallpaperErrorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#B32D2D"
+        app:layout_constraintBottom_toTopOf="@+id/viewWallpaperBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wallpaperGroupNumber"
+        app:layout_constraintVertical_bias="0.411"
+        tools:textSize="18sp" />
+
+    <Button
         android:id="@+id/changeWallpaper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:text="Change Wallpaper"
-        app:layout_constraintBottom_toTopOf="@+id/leaveGroup"
+        android:layout_marginTop="12dp"
+        android:text="change Wallpaper"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewWallpaperBtn" />
 
-    <ImageView
-        android:id="@+id/currWallpaper"
+    <Button
+        android:id="@+id/viewMembersBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/changeWallpaper"
+        android:layout_marginTop="12dp"
+        android:text="view members"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wallpaperGroupNumber"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toBottomOf="@+id/changeWallpaper" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

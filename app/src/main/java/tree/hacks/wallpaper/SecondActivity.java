@@ -1,8 +1,8 @@
 package tree.hacks.wallpaper;
 
 
+
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,9 +10,12 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.Button;
+
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,48 +35,66 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class SecondActivity extends AppCompatActivity {
 
     private Button setWallpaper;
+    TextView userName;
+    TextView wallpaperGroupNumber;
+    Button leaveGroup;
+    Button confirmLeave;
+    Button cancelLeave;
+    Button viewWallpaper;
+    Button viewMembers;
+    TextView viewWallpaperError;
+    boolean wallpaperChanged;
+    Bitmap bitmap;
     private Uri imageUri;
     ImageButton image;
     String nameText;
     String groupNumText;
     Uri downloadUri;
 
-    ImageView currWallpaper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
-        currWallpaper = (ImageView)findViewById(R.id.currWallpaper);
+
+        wallpaperChanged = false;
         setWallpaper = (Button) findViewById(R.id.changeWallpaper);
         setWallpaper.setOnClickListener(v -> {
+            viewWallpaperError.setText("");
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent,0);
         });
 
-        TextView userName = (TextView) findViewById(R.id.userName);
+
+        userName = (TextView) findViewById(R.id.userName);
         nameText = getIntent().getExtras().getString("userName");
         userName.setText("hi " + nameText + "!");
 
-        TextView wallpaperGroupNumber = (TextView) findViewById(R.id.wallpaperGroupNumber);
+        wallpaperGroupNumber = (TextView) findViewById(R.id.wallpaperGroupNumber);
         groupNumText = getIntent().getExtras().getString("groupNum");
         wallpaperGroupNumber.setText("you are in group " + groupNumText);
 
 
-        Button leaveGroup = (Button) findViewById(R.id.leaveGroup);
-        Button confirmLeave = (Button) findViewById(R.id.confirmLeave);
-        Button cancelLeave = (Button) findViewById(R.id.cancelLeave);
-
+        viewWallpaperError = (TextView) findViewById(R.id.viewWallpaperErrorText);
+        leaveGroup = (Button) findViewById(R.id.leaveGroup);
+        confirmLeave = (Button) findViewById(R.id.confirmLeave);
+        cancelLeave = (Button) findViewById(R.id.cancelLeave);
+        viewWallpaper = (Button) findViewById(R.id.viewWallpaperBtn);
+        viewMembers = (Button) findViewById(R.id.viewMembersBtn);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
         int width = displayMetrics.widthPixels;
+
 
         leaveGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -85,6 +106,7 @@ public class SecondActivity extends AppCompatActivity {
         confirmLeave.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // leave the group in the database
+                viewWallpaperError.setText("");
                 Intent returnBtn = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(returnBtn);
             }
@@ -94,6 +116,29 @@ public class SecondActivity extends AppCompatActivity {
             public void onClick(View v) {
                 confirmLeave.setVisibility(View.INVISIBLE);
                 cancelLeave.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        viewWallpaper.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (! wallpaperChanged) {
+                    viewWallpaperError.setText("You have not set a wallpaper yet!");
+                    return;
+                }
+                viewWallpaperError.setText("");
+
+                Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.ViewWallpaper.class);
+                startIntent.putExtra("uri", targetUri.toString());
+                startActivity(startIntent);
+            }
+        });
+
+        viewMembers.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.ViewGroupMembers.class);
+                startIntent.putExtra("groupNum", groupNum);
+                startActivity(startIntent);
+                viewWallpaperError.setText("");
             }
         });
 
@@ -114,6 +159,7 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -153,7 +199,6 @@ public class SecondActivity extends AppCompatActivity {
                             }
                         }
                     });
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
