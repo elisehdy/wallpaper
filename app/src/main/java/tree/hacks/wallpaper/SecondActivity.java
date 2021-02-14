@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -55,6 +57,8 @@ public class SecondActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         wallpaperChanged = false;
         setWallpaper = (Button) findViewById(R.id.changeWallpaper);
@@ -97,6 +101,9 @@ public class SecondActivity extends AppCompatActivity {
         confirmLeave.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // leave the group in the database
+                DocumentReference room = db.collection("rooms").document(groupNumText);
+                room.update("members", FieldValue.arrayRemove(nameText));
+
                 viewWallpaperError.setText("");
                 Intent returnBtn = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(returnBtn);
@@ -119,7 +126,7 @@ public class SecondActivity extends AppCompatActivity {
                 viewWallpaperError.setText("");
 
                 Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.ViewWallpaper.class);
-                startIntent.putExtra("uri", imageUri.toString());
+                startIntent.putExtra("groupNum", groupNumText);
                 startActivity(startIntent);
             }
         });
