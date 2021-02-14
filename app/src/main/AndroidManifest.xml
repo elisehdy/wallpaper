@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Wallpaper">
-        <activity android:name=".ViewWallpaper"></activity>
+        <activity android:name=".ViewGroupMembers"></activity>
+        <activity android:name=".ViewWallpaper" />
         <activity android:name=".SecondActivity" />
         <activity
             android:name=".MainActivity"

@@ -29,6 +29,7 @@ public class SecondActivity extends AppCompatActivity {
     Button confirmLeave;
     Button cancelLeave;
     Button viewWallpaper;
+    Button viewMembers;
     TextView viewWallpaperError;
     boolean wallpaperChanged;
     Bitmap bitmap;
@@ -42,6 +43,7 @@ public class SecondActivity extends AppCompatActivity {
         wallpaperChanged = false;
         setWallpaper = (Button) findViewById(R.id.changeWallpaper);
         setWallpaper.setOnClickListener(v -> {
+            viewWallpaperError.setText("");
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent,0);
         });
@@ -49,20 +51,19 @@ public class SecondActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         userName = (TextView) findViewById(R.id.userName);
-        String text = getIntent().getExtras().getString("userName");
-        userName.setText("hi " + text + "!");
+        String name = getIntent().getExtras().getString("userName");
+        userName.setText("hi " + name + "!");
 
         wallpaperGroupNumber = (TextView) findViewById(R.id.wallpaperGroupNumber);
-        text = getIntent().getExtras().getString("groupNum");
-        wallpaperGroupNumber.setText("you are in group " + text);
+        String groupNum = getIntent().getExtras().getString("groupNum");
+        wallpaperGroupNumber.setText("you are in group " + groupNum);
 
         viewWallpaperError = (TextView) findViewById(R.id.viewWallpaperErrorText);
         leaveGroup = (Button) findViewById(R.id.leaveGroup);
         confirmLeave = (Button) findViewById(R.id.confirmLeave);
         cancelLeave = (Button) findViewById(R.id.cancelLeave);
         viewWallpaper = (Button) findViewById(R.id.viewWallpaperBtn);
-
-
+        viewMembers = (Button) findViewById(R.id.viewMembersBtn);
 
         leaveGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -74,6 +75,7 @@ public class SecondActivity extends AppCompatActivity {
         confirmLeave.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // leave the group in the database
+                viewWallpaperError.setText("");
                 Intent returnBtn = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(returnBtn);
             }
@@ -88,7 +90,6 @@ public class SecondActivity extends AppCompatActivity {
 
         viewWallpaper.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.println(wallpaperChanged);
                 if (! wallpaperChanged) {
                     viewWallpaperError.setText("You have not set a wallpaper yet!");
                     return;
@@ -98,6 +99,15 @@ public class SecondActivity extends AppCompatActivity {
                 Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.ViewWallpaper.class);
                 startIntent.putExtra("uri", targetUri.toString());
                 startActivity(startIntent);
+            }
+        });
+
+        viewMembers.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.ViewGroupMembers.class);
+                startIntent.putExtra("groupNum", groupNum);
+                startActivity(startIntent);
+                viewWallpaperError.setText("");
             }
         });
 
