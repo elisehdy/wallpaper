@@ -7,18 +7,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Source;
-import com.google.firestore.v1.ArrayValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,17 +20,23 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    EditText nameText;
+    EditText groupNumber;
+    TextView messageText;
+    Button enterGroupBtn;
+    Button createGroupBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        EditText nameText = (EditText) findViewById(R.id.nameText);
-        EditText groupNumber = (EditText) findViewById(R.id.groupNumber);
-        TextView messageText = (TextView) findViewById(R.id.messageText);
+        nameText = (EditText) findViewById(R.id.nameText);
+        groupNumber = (EditText) findViewById(R.id.groupNumber);
+        messageText = (TextView) findViewById(R.id.messageText);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        Button enterGroupBtn = (Button) findViewById(R.id.enterGroupBtn);
+        enterGroupBtn = (Button) findViewById(R.id.enterGroupBtn);
         enterGroupBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String name = nameText.getText().toString();
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button createGroupBtn = (Button) findViewById(R.id.createGroupBtn);
+        createGroupBtn = (Button) findViewById(R.id.createGroupBtn);
         createGroupBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String name = nameText.getText().toString();
@@ -86,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(startIntent);
             }
         });
+    }
+
+    private void joinRoom(String name, String groupNum) {
+
     }
 
     private String generateCode() {
