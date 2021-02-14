@@ -103,26 +103,31 @@ public class SecondActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
                             for(QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                                Glide.with(SecondActivity.this)
-                                        .asBitmap()
-                                        .load(Objects.requireNonNull(document.getData().get("wallpaper")).toString())
-                                        .into(new CustomTarget<Bitmap>() {
-                                            @Override
-                                            public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
-                                                WallpaperManager wallpaperChanger = WallpaperManager.getInstance(getApplicationContext());
-                                                try {
-                                                    wallpaperChanger.setBitmap(bitmap);
-                                                    Toast.makeText(SecondActivity.this, "Wallpaper changed", Toast.LENGTH_LONG).show();
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
+                                try {
+                                    Glide.with(SecondActivity.this)
+                                            .asBitmap()
+                                            .load(Objects.requireNonNull(document.getData().get("wallpaper")).toString())
+                                            .into(new CustomTarget<Bitmap>() {
+                                                @Override
+                                                public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                                                    WallpaperManager wallpaperChanger = WallpaperManager.getInstance(getApplicationContext());
+                                                    try {
+                                                        wallpaperChanger.setBitmap(bitmap);
+                                                        Toast.makeText(SecondActivity.this, "Wallpaper changed", Toast.LENGTH_LONG).show();
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
                                                 }
-                                            }
 
-                                            @Override
-                                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                                @Override
+                                                public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                                            }
-                                        });
+                                                }
+                                            });
+                                } catch (NullPointerException e) {
+
+                                }
+
                             }
                         } else {
                             Toast.makeText(SecondActivity.this, "Failed to retrieve data", Toast.LENGTH_LONG).show();
