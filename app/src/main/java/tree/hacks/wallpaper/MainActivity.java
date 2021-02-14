@@ -9,10 +9,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Source;
+import com.google.firestore.v1.ArrayValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,14 +49,10 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                CollectionReference group = db.collection("rooms");
-                Map<String, Object> data = new HashMap<>();
-                ArrayList<String> members = (ArrayList) data.get("members");
-                members.add(name);
-                data.put("members", members);
-                group.document(groupNum).set(data);
+                DocumentReference room = db.collection("rooms").document(groupNum);
+                room.update("members", FieldValue.arrayUnion(name));
 
-                Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.SecondActivity.class);
+                Intent startIntent = new Intent(getApplicationContext(), SecondActivity.class);
                 messageText.setText(""); // clear error message from beginning
                 // show how to pass information to another activity
                 startIntent.putExtra("userName", name);
