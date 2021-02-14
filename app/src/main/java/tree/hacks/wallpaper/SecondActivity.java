@@ -44,7 +44,6 @@ public class SecondActivity extends AppCompatActivity {
     Button cancelLeave;
     Button viewWallpaper;
     Button viewMembers;
-    TextView viewWallpaperError;
     boolean wallpaperChanged;
     Bitmap bitmap;
     private Uri imageUri;
@@ -63,7 +62,6 @@ public class SecondActivity extends AppCompatActivity {
         wallpaperChanged = false;
         setWallpaper = (Button) findViewById(R.id.changeWallpaper);
         setWallpaper.setOnClickListener(v -> {
-            viewWallpaperError.setText("");
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent,0);
         });
@@ -71,14 +69,12 @@ public class SecondActivity extends AppCompatActivity {
 
         userName = (TextView) findViewById(R.id.userName);
         nameText = getIntent().getExtras().getString("userName");
-        userName.setText("hi " + nameText + "!");
+        userName.setText(nameText + "!");
 
         wallpaperGroupNumber = (TextView) findViewById(R.id.wallpaperGroupNumber);
         groupNumText = getIntent().getExtras().getString("groupNum");
-        wallpaperGroupNumber.setText("you are in group " + groupNumText);
+        wallpaperGroupNumber.setText(groupNumText);
 
-
-        viewWallpaperError = (TextView) findViewById(R.id.viewWallpaperErrorText);
         leaveGroup = (Button) findViewById(R.id.leaveGroup);
         confirmLeave = (Button) findViewById(R.id.confirmLeave);
         cancelLeave = (Button) findViewById(R.id.cancelLeave);
@@ -104,7 +100,6 @@ public class SecondActivity extends AppCompatActivity {
                 DocumentReference room = db.collection("rooms").document(groupNumText);
                 room.update("members", FieldValue.arrayRemove(nameText));
 
-                viewWallpaperError.setText("");
                 Intent returnBtn = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(returnBtn);
             }
@@ -119,12 +114,6 @@ public class SecondActivity extends AppCompatActivity {
 
         viewWallpaper.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (! wallpaperChanged) {
-                    viewWallpaperError.setText("You have not set a wallpaper yet!");
-                    //return;
-                }
-                viewWallpaperError.setText("");
-
                 Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.ViewWallpaper.class);
                 startIntent.putExtra("groupNum", groupNumText);
                 startActivity(startIntent);
@@ -136,7 +125,6 @@ public class SecondActivity extends AppCompatActivity {
                 Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.ViewGroupMembers.class);
                 startIntent.putExtra("groupNum", groupNumText);
                 startActivity(startIntent);
-                viewWallpaperError.setText("");
             }
         });
 
