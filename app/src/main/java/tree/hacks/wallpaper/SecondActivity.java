@@ -60,6 +60,7 @@ public class SecondActivity extends AppCompatActivity {
     Uri downloadUri;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,7 +129,7 @@ public class SecondActivity extends AppCompatActivity {
                 viewWallpaperError.setText("");
 
                 Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.ViewWallpaper.class);
-                startIntent.putExtra("uri", targetUri.toString());
+                startIntent.putExtra("uri", imageUri.toString());
                 startActivity(startIntent);
             }
         });
@@ -136,7 +137,7 @@ public class SecondActivity extends AppCompatActivity {
         viewMembers.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.ViewGroupMembers.class);
-                startIntent.putExtra("groupNum", groupNum);
+                startIntent.putExtra("groupNum", groupNumText);
                 startActivity(startIntent);
                 viewWallpaperError.setText("");
             }
@@ -168,7 +169,6 @@ public class SecondActivity extends AppCompatActivity {
             Bitmap bitmap;
             try {
                 bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
-                currWallpaper.setImageBitmap(bitmap);
                 WallpaperManager wallpaperChanger = WallpaperManager.getInstance(getApplicationContext());
                 try {
                     wallpaperChanger.setBitmap(bitmap);
@@ -188,6 +188,7 @@ public class SecondActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
                             if(task.isSuccessful()) {
+                                wallpaperChanged = true;
                                 Uri downloadUri = task.getResult();
                                 CollectionReference group = db.collection("rooms");
                                 Map<String, Object> image = new HashMap<>();
