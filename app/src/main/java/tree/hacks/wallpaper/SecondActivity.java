@@ -30,14 +30,16 @@ public class SecondActivity extends AppCompatActivity {
     Button cancelLeave;
     Button viewWallpaper;
     TextView viewWallpaperError;
-    boolean wallpaperChanged = false;
+    boolean wallpaperChanged;
     Bitmap bitmap;
+    Uri targetUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
+        wallpaperChanged = false;
         setWallpaper = (Button) findViewById(R.id.changeWallpaper);
         setWallpaper.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -86,15 +88,15 @@ public class SecondActivity extends AppCompatActivity {
 
         viewWallpaper.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                System.out.println(wallpaperChanged);
                 if (! wallpaperChanged) {
                     viewWallpaperError.setText("You have not set a wallpaper yet!");
+                    return;
                 }
                 viewWallpaperError.setText("");
-                DataPasser dataToPass = new DataPasser();
-                dataToPass.put("bitmap", bitmap);
 
                 Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.ViewWallpaper.class);
-                startIntent.putExtra("data", dataToPass);
+                startIntent.putExtra("uri", targetUri.toString());
                 startActivity(startIntent);
             }
         });
@@ -117,15 +119,13 @@ public class SecondActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
-            Uri targetUri = data.getData();
+            targetUri = data.getData();
             try {
                 bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
                 WallpaperManager wallpaperChanger = WallpaperManager.getInstance(getApplicationContext());
                 try {
-
                     wallpaperChanger.setBitmap(bitmap);
                     Toast.makeText(SecondActivity.this, "Wallpaper Changed", Toast.LENGTH_LONG).show();
-                    System.out.println("wallpaper changed?");
                     wallpaperChanged = true;
                 } catch (IOException e) {
                     e.printStackTrace();
