@@ -1,5 +1,6 @@
 package tree.hacks.wallpaper;
 
+import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -27,10 +29,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -60,6 +66,7 @@ public class SecondActivity extends AppCompatActivity {
     String nameText;
     String groupNumText;
     Uri downloadUri;
+    String notifId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +123,7 @@ public class SecondActivity extends AppCompatActivity {
                                                 WallpaperManager wallpaperChanger = WallpaperManager.getInstance(getApplicationContext());
                                                 try {
                                                     wallpaperChanger.setBitmap(bitmap);
-                                                    Toast.makeText(SecondActivity.this, "Wallpaper changed", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(SecondActivity.this, "Wallpaper changed", Toast.LENGTH_SHORT).show();
                                                 } catch (IOException e) {
                                                     e.printStackTrace();
                                                 }
@@ -134,6 +141,16 @@ public class SecondActivity extends AppCompatActivity {
                     }
                 });
 
+        FirebaseMessaging.getInstance().subscribeToTopic(groupNumText)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(SecondActivity.this, "subscription failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
         leaveGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 confirmLeave.setVisibility(View.VISIBLE);
@@ -146,6 +163,16 @@ public class SecondActivity extends AppCompatActivity {
                 // leave the group in the database
                 DocumentReference room = db.collection("rooms").document(groupNumText);
                 room.update("members", FieldValue.arrayRemove(nameText));
+
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(groupNumText)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (!task.isSuccessful()) {
+                                    Toast.makeText(SecondActivity.this, "unsubscription failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
 
                 viewWallpaperError.setText("");
                 Intent returnBtn = new Intent(getApplicationContext(), MainActivity.class);
@@ -184,6 +211,43 @@ public class SecondActivity extends AppCompatActivity {
             }
         });
 
+        final DocumentReference docRef = db.collection("rooms").document(groupNumText);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Toast.makeText(SecondActivity.this, "Connection Failed", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    Glide.with(SecondActivity.this)
+                            .asBitmap()
+                            .load(Objects.requireNonNull(snapshot.getData().get("wallpaper")).toString())
+                            .into(new CustomTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                                    WallpaperManager wallpaperChanger = WallpaperManager.getInstance(getApplicationContext());
+                                    try {
+                                        wallpaperChanger.setBitmap(bitmap);
+                                        Toast.makeText(SecondActivity.this, "Wallpaper changed", Toast.LENGTH_SHORT).show();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                                }
+                            });
+                } else {
+
+                }
+            }
+        });
+
     }
 
     @Override
@@ -198,6 +262,8 @@ public class SecondActivity extends AppCompatActivity {
         setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(setIntent);
     }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

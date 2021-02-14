@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         enterGroupBtn = (Button) findViewById(R.id.enterGroupBtn);
         createGroupBtn = (Button) findViewById(R.id.createGroupBtn);
 
+
+
         enterGroupBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String name = nameText.getText().toString();
@@ -117,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> members = new ArrayList<String>();
         members.add(name);
         data.put("members", members);
+        data.put("wallpaper", "");
         group.document(groupNum).set(data);
         Intent startIntent = new Intent(getApplicationContext(), tree.hacks.wallpaper.SecondActivity.class);
         messageText.setText(""); // clear error message from beginning
