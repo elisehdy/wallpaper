@@ -4,15 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/moreblob"
     tools:context=".SecondActivity">
 
     <Button
         android:id="@+id/cancelLeave"
-        android:layout_width="83dp"
+        android:layout_width="110dp"
         android:layout_height="45dp"
+        android:fontFamily="@font/libel"
         android:text="cancel"
-        android:textSize="10sp"
+        android:textSize="15sp"
         android:visibility="invisible"
+        app:backgroundTint="#A642588F"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/leaveGroup"
         tools:strokeColor="#E91E63" />
@@ -21,57 +24,66 @@
         android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textSize="30sp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:fontFamily="@font/libel"
+        android:textSize="50sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        android:textColor="#000080" />
+
 
     <TextView
         android:id="@+id/wallpaperGroupNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:textSize="30sp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:fontFamily="@font/libel"
+        android:gravity="right"
+        android:textColor="#000080"
+        android:textSize="50sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userName" />
-
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <Button
         android:id="@+id/leaveGroup"
-        android:layout_width="151dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="80dp"
+        android:layout_width="220dp"
+        android:layout_height="70dp"
+        android:fontFamily="@font/libel"
         android:text="LEAVE GROUP"
-        android:textSize="14sp"
+        android:textSize="25sp"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:backgroundTint="#A642588F"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewMembersBtn"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/viewMembersBtn" />
 
     <Button
         android:id="@+id/confirmLeave"
-        android:layout_width="83dp"
+        android:layout_width="110dp"
         android:layout_height="45dp"
+        android:backgroundTint="#E91E63"
+        android:fontFamily="@font/libel"
         android:text="confirm"
-        android:textSize="10sp"
+        android:textSize="15sp"
         android:visibility="invisible"
+        app:backgroundTint="#DF6E6E"
         app:layout_constraintEnd_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/leaveGroup"
-        tools:strokeColor="#E91E63" />
+        app:layout_constraintTop_toBottomOf="@+id/leaveGroup" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:fontFamily="@font/libel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,34 +92,26 @@
 
     <Button
         android:id="@+id/viewWallpaperBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
+        android:layout_width="220dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/libel"
         android:text="View Wallpaper"
+        android:textSize="25sp"
+        app:backgroundTint="#BC6D93F4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/wallpaperGroupNumber" />
 
-    <TextView
-        android:id="@+id/viewWallpaperErrorText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#B32D2D"
-        app:layout_constraintBottom_toTopOf="@+id/viewWallpaperBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wallpaperGroupNumber"
-        app:layout_constraintVertical_bias="0.411"
-        tools:textSize="18sp" />
-
     <Button
         android:id="@+id/changeWallpaper"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_width="220dp"
+        android:layout_height="70dp"
+        android:fontFamily="@font/libel"
         android:text="change Wallpaper"
+        android:textSize="25sp"
+        app:backgroundTint="#BC5C7BCA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -115,13 +119,48 @@
 
     <Button
         android:id="@+id/viewMembersBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_width="220dp"
+        android:layout_height="70dp"
+        android:fontFamily="@font/libel"
         android:text="view members"
+        android:textSize="25sp"
+        app:backgroundTint="#BC4E68AA"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/changeWallpaper" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="142dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="25dp"
+        android:fontFamily="@font/libel"
+        android:text="Hello there,"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="206dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:fontFamily="@font/libel"
+        android:text="Welcome to Group"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userName" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

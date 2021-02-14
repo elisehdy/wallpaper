@@ -4,67 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/blobback"
     tools:context=".MainActivity">
 
     <Button
         android:id="@+id/enterGroupBtn"
-        android:layout_width="87dp"
-        android:layout_height="83dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="264dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="76dp"
+        android:backgroundTint="#60E5C1"
+        android:fontFamily="@font/libel"
+        android:gravity="center"
         android:text="Enter Group"
-        app:layout_constraintStart_toEndOf="@+id/groupNumber"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messageText" />
 
     <EditText
         android:id="@+id/nameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="44dp"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="152dp"
         android:ems="10"
-        android:hint="enter name here"
+        android:fontFamily="@font/libel"
+        android:gravity="center_horizontal"
+        android:hint="Name"
         android:inputType="text"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/groupNumber"
-        android:layout_width="143dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="24dp"
         android:ems="10"
-        android:hint="enter group #"
+        android:fontFamily="@font/libel"
+        android:gravity="center_horizontal"
+        android:hint="Group #"
         android:inputType="number"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messageText" />
+        app:layout_constraintTop_toBottomOf="@+id/nameText" />
 
     <TextView
         android:id="@+id/messageText"
         android:layout_width="240dp"
         android:layout_height="54dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/libel"
+        android:gravity="center_horizontal"
         android:textColor="#C52323"
-        android:textSize="18sp"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameText" />
+        app:layout_constraintTop_toBottomOf="@+id/groupNumber" />
 
     <Button
         android:id="@+id/createGroupBtn"
         android:layout_width="264dp"
-        android:layout_height="43dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/libel"
         android:text="Create Group"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/enterGroupBtn"
-        app:layout_constraintVertical_bias="0.13" />
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
