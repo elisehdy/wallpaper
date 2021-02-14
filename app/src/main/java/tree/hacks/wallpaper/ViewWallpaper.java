@@ -25,6 +25,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Objects;
 
 public class ViewWallpaper extends AppCompatActivity {
 
@@ -51,7 +52,7 @@ public class ViewWallpaper extends AppCompatActivity {
                         if(task.isSuccessful()) {
                             for(QueryDocumentSnapshot document : task.getResult()) {
                                 Glide.with(ViewWallpaper.this)
-                                        .load(document.getData().get("wallpaper").toString())
+                                        .load(Objects.requireNonNull(document.getData().get("wallpaper")).toString())
                                         .into(currWallpaper);
                             }
                         } else {

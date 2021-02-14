@@ -4,6 +4,7 @@ import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,8 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,6 +29,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class SecondActivity extends AppCompatActivity {
@@ -91,6 +99,41 @@ public class SecondActivity extends AppCompatActivity {
         int width = displayMetrics.widthPixels;
 
 
+        db.collection("rooms")
+                .whereEqualTo("group number", groupNumText)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for(QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                Glide.with(SecondActivity.this)
+                                        .asBitmap()
+                                        .load(Objects.requireNonNull(document.getData().get("wallpaper")).toString())
+                                        .into(new CustomTarget<Bitmap>() {
+                                            @Override
+                                            public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                                                WallpaperManager wallpaperChanger = WallpaperManager.getInstance(getApplicationContext());
+                                                try {
+                                                    wallpaperChanger.setBitmap(bitmap);
+                                                    Toast.makeText(SecondActivity.this, "Wallpaper changed", Toast.LENGTH_LONG).show();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                                            }
+                                        });
+                            }
+                        } else {
+                            Toast.makeText(SecondActivity.this, "Failed to retrieve data", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
         leaveGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 confirmLeave.setVisibility(View.VISIBLE);
@@ -109,6 +152,7 @@ public class SecondActivity extends AppCompatActivity {
                 startActivity(returnBtn);
             }
         });
+
 
         cancelLeave.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
