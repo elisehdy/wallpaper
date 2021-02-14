@@ -4,11 +4,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+
+import java.util.List;
 
 public class ViewGroupMembers extends AppCompatActivity {
 
@@ -18,9 +26,12 @@ public class ViewGroupMembers extends AppCompatActivity {
     ListView myListView;
     String groupNum;
     Button returnToGroup;
+    boolean foundValues;
+    Object lockBoolean = new Object();
 
     FirebaseFirestore db;
     FirebaseStorage storage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,31 +44,42 @@ public class ViewGroupMembers extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
-
-//        db.collection("rooms")
-//                .whereEqualTo("group number", groupNum)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            groupMembers = (String[]) document.getData().get("members");
-//                            System.out.println("done!");
-//                            owner = (String) document.getData().get("owner");
-//                        }
-//                    }
-//                });
-        String [] wallpaperOwner = getWallpaperOwner(groupMembers, owner);
-
-        myListView = (ListView) findViewById(R.id.myListView);
-        ItemAdapter itemAdapter = new ItemAdapter(this, groupMembers, wallpaperOwner);
-        myListView.setAdapter(itemAdapter);
+        owner = ""; // initialize value
+        foundValues = false;
+        db.collection("rooms")
+                .whereEqualTo("group number", groupNum)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for(QueryDocumentSnapshot document : task.getResult()) {
+                                synchronized (lockBoolean) {
+                                    groupMembers = convertToArray((List<String>) document.getData().get("members"));
+                                    owner = (String) document.getData().get("owner");
+                                    foundValues = true;
+                                    createDisplayList();
+                                }
+                            }
+                        } else {
+                            Toast.makeText(ViewGroupMembers.this, "Failed to retrieve data", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
 
         returnToGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 onBackPressed();
             }
         });
+    }
+
+    private void createDisplayList() {
+        String[] wallpaperOwner = getWallpaperOwner(groupMembers, owner);
+        myListView = (ListView) findViewById(R.id.myListView);
+        ItemAdapter itemAdapter = new ItemAdapter(this, groupMembers, wallpaperOwner);
+        myListView.setAdapter(itemAdapter);
+        System.out.println("stuff happened");
     }
 
     private String[] getWallpaperOwner(String[] members, String owner) {
@@ -68,7 +90,16 @@ public class ViewGroupMembers extends AppCompatActivity {
                 return ownerList;
             }
         }
-
         return ownerList;
+    }
+
+    private String[] convertToArray(List<String> stringList) {
+        String[] newArr = new String[stringList.size()];
+
+        for (int i = 0; i < stringList.size(); i++) {
+            newArr[i] = stringList.get(i);
+        }
+
+        return newArr;
     }
 }

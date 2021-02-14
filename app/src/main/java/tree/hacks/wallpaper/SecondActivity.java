@@ -121,7 +121,7 @@ public class SecondActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (! wallpaperChanged) {
                     viewWallpaperError.setText("You have not set a wallpaper yet!");
-                    return;
+                    //return;
                 }
                 viewWallpaperError.setText("");
 
