@@ -1,6 +1,8 @@
 package tree.hacks.wallpaper;
 
 
+
+import android.util.DisplayMetrics;
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,15 +12,33 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+
+import android.widget.ImageButton;
+import android.widget.ImageView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class SecondActivity extends AppCompatActivity {
 
@@ -33,7 +53,12 @@ public class SecondActivity extends AppCompatActivity {
     TextView viewWallpaperError;
     boolean wallpaperChanged;
     Bitmap bitmap;
-    Uri targetUri;
+    private Uri imageUri;
+    ImageButton image;
+    String nameText;
+    String groupNumText;
+    Uri downloadUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +73,15 @@ public class SecondActivity extends AppCompatActivity {
             startActivityForResult(intent,0);
         });
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         userName = (TextView) findViewById(R.id.userName);
-        String name = getIntent().getExtras().getString("userName");
-        userName.setText("hi " + name + "!");
+        nameText = getIntent().getExtras().getString("userName");
+        userName.setText("hi " + nameText + "!");
 
         wallpaperGroupNumber = (TextView) findViewById(R.id.wallpaperGroupNumber);
-        String groupNum = getIntent().getExtras().getString("groupNum");
-        wallpaperGroupNumber.setText("you are in group " + groupNum);
+        groupNumText = getIntent().getExtras().getString("groupNum");
+        wallpaperGroupNumber.setText("you are in group " + groupNumText);
+
 
         viewWallpaperError = (TextView) findViewById(R.id.viewWallpaperErrorText);
         leaveGroup = (Button) findViewById(R.id.leaveGroup);
@@ -64,6 +89,12 @@ public class SecondActivity extends AppCompatActivity {
         cancelLeave = (Button) findViewById(R.id.cancelLeave);
         viewWallpaper = (Button) findViewById(R.id.viewWallpaperBtn);
         viewMembers = (Button) findViewById(R.id.viewMembersBtn);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+
 
         leaveGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -128,15 +159,46 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
         if(resultCode == RESULT_OK){
-            targetUri = data.getData();
+            imageUri = data.getData();
+            Bitmap bitmap;
             try {
-                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+                currWallpaper.setImageBitmap(bitmap);
                 WallpaperManager wallpaperChanger = WallpaperManager.getInstance(getApplicationContext());
                 try {
                     wallpaperChanger.setBitmap(bitmap);
-                    Toast.makeText(SecondActivity.this, "Wallpaper Changed", Toast.LENGTH_LONG).show();
-                    wallpaperChanged = true;
+
+                    StorageReference storageRef = storage.getReference();
+                    StorageReference wallRef = storageRef.child("images/"+imageUri.getLastPathSegment());
+                    UploadTask uploadTask = wallRef.putFile(imageUri);
+                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+                            return wallRef.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if(task.isSuccessful()) {
+                                Uri downloadUri = task.getResult();
+                                CollectionReference group = db.collection("rooms");
+                                Map<String, Object> image = new HashMap<>();
+                                image.put("wallpaper",  downloadUri.toString());
+                                group.document(groupNumText).update(image);
+                                Toast.makeText(SecondActivity.this, " " + downloadUri, Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(SecondActivity.this, "Upload Failed", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
