@@ -8,50 +8,50 @@
 
     <Button
         android:id="@+id/enterGroupBtn"
-        android:layout_width="92dp"
-        android:layout_height="88dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="72dp"
-        android:layout_marginRight="72dp"
+        android:layout_width="87dp"
+        android:layout_height="83dp"
+        android:layout_marginTop="16dp"
         android:text="Enter Group"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/groupNumber"
         app:layout_constraintTop_toBottomOf="@+id/messageText" />
 
     <EditText
         android:id="@+id/nameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="44dp"
         android:ems="10"
         android:hint="enter name here"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/groupNumber"
-        android:layout_width="170dp"
+        android:layout_width="143dp"
         android:layout_height="48dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="36dp"
         android:ems="10"
-        android:hint="enter 6 digit group #"
+        android:hint="enter group #"
         android:inputType="number"
-        app:layout_constraintEnd_toStartOf="@+id/enterGroupBtn"
-        app:layout_constraintHorizontal_bias="0.961"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messageText" />
 
     <TextView
         android:id="@+id/messageText"
         android:layout_width="240dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="24dp"
         android:textColor="#C52323"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameText" />
 
